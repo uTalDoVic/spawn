@@ -2,7 +2,7 @@
 
 Commands: /hub, /spawn, /lobby
 
-Download PHAR:
+Download PHAR: https://raw.githubusercontent.com/uTalDoVic/spawn/master/SimpleSpawn_v1.phar
 
 Author: uTalDoVic
 
