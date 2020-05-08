@@ -1,0 +1,9 @@
+name: SimpleSpawn
+author: uTalDoVic
+version: 1.0
+api: 3.0.0
+main: utaldovic\spawn\Main
+commands:
+  spawn:
+    description: Teleport to hub
+    aliases: ["hub", "lobby"]
