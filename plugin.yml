@@ -7,3 +7,5 @@ commands:
   spawn:
     description: Teleport to hub
     aliases: ["hub", "lobby"]
+  setrotate:
+    description: Set player rotate
