@@ -8,6 +8,7 @@ use pocketmine\command\{
 	CommandSender,
 	Command
 };
+use pocketmine\level\Position;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\utils\Config;
 
@@ -20,19 +21,29 @@ class Main extends PluginBase implements Listener{
 		@mkdir($this->getDataFolder());
 
 		$this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
-			"message" => "§cTeleported to spawn"
+			"message" => "§cTeleported to spawn",
+			"yaw" => 0,
+			"pitch" => 0
 		]);
 
 	}
 
 	public function onLogin(PlayerLoginEvent $ev){
 		$p = $ev->getPlayer();
-		$p->teleport($this->getServer()->getDefaultLevel()->getSafeSpawn());
+		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
+		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel(), $this->config->get("yaw"), $this->config->get("pitch")));
 	}
 
 	public function onCommand(CommandSender $p, Command $c, string $l, array $a) : bool {
-		$p->teleport($this->getServer()->getDefaultLevel()->getSafeSpawn());
-		$p->sendMessage($this->config->get("message"));
+		if($cmd->getName() == "setrotate" and $p->isOp()){
+			$this->config->set("yaw", $p->getYaw());
+			$this->config->set("yaw", $p->getPitch());
+			$this->config->save();
+		}else{
+			$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
+			$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel(), $this->config->get("yaw"), $this->config->get("pitch")));
+			$p->sendMessage($this->config->get("message"));
+		}
 		return true;
 	}
 }
