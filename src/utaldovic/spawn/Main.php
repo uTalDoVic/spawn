@@ -10,6 +10,7 @@ use pocketmine\command\{
 };
 use pocketmine\level\Position;
 use pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\utils\Config;
 
 class Main extends PluginBase implements Listener{
@@ -31,17 +32,25 @@ class Main extends PluginBase implements Listener{
 	public function onLogin(PlayerLoginEvent $ev){
 		$p = $ev->getPlayer();
 		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel(), $this->config->get("yaw"), $this->config->get("pitch")));
+		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
+	}
+	public function onJoin(PlayerJoinEvent $ev){
+		$p = $ev->getPlayer();
+		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
+		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
 	}
 
 	public function onCommand(CommandSender $p, Command $c, string $l, array $a) : bool {
-		if($cmd->getName() == "setrotate" and $p->isOp()){
-			$this->config->set("yaw", $p->getYaw());
-			$this->config->set("yaw", $p->getPitch());
-			$this->config->save();
+		if($c->getName() == "setrotate"){
+			if($p->isOp()){
+				$this->config->set("yaw", $p->getYaw());
+				$this->config->set("pitch", $p->getPitch());
+				$this->config->save();
+				$p->sendMessage("§aSucess");
+			}
 		}else{
 			$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-			$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel(), $this->config->get("yaw"), $this->config->get("pitch")));
+			$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
 			$p->sendMessage($this->config->get("message"));
 		}
 		return true;
