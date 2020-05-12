@@ -14,6 +14,8 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\utils\Config;
 
 class Main extends PluginBase implements Listener{
+	
+	public $cfg;
 
 	public function onEnable(){
 
@@ -21,7 +23,7 @@ class Main extends PluginBase implements Listener{
 
 		@mkdir($this->getDataFolder());
 
-		$this->config = new Config($this->getDataFolder()."config.yml", Config::YAML, [
+		$this->cfg = new Config($this->getDataFolder()."config.yml", Config::YAML, [
 			"message" => "§cTeleported to spawn",
 			"yaw" => 0,
 			"pitch" => 0
@@ -32,26 +34,26 @@ class Main extends PluginBase implements Listener{
 	public function onLogin(PlayerLoginEvent $ev){
 		$p = $ev->getPlayer();
 		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
+		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->cfg->get("yaw"), $this->cfg->get("pitch"));
 	}
 	public function onJoin(PlayerJoinEvent $ev){
 		$p = $ev->getPlayer();
 		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
+		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->cfg->get("yaw"), $this->cfg->get("pitch"));
 	}
 
 	public function onCommand(CommandSender $p, Command $c, string $l, array $a) : bool {
 		if($c->getName() == "setrotate"){
 			if($p->isOp()){
-				$this->config->set("yaw", $p->getYaw());
-				$this->config->set("pitch", $p->getPitch());
-				$this->config->save();
+				$this->cfg->set("yaw", $p->getYaw());
+				$this->cfg->set("pitch", $p->getPitch());
+				$this->cfg->save();
 				$p->sendMessage("§aSucess");
 			}
 		}else{
 			$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-			$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->config->get("yaw"), $this->config->get("pitch"));
-			$p->sendMessage($this->config->get("message"));
+			$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->cfg->get("yaw"), $this->cfg->get("pitch"));
+			$p->sendMessage($this->cfg->get("message"));
 		}
 		return true;
 	}
