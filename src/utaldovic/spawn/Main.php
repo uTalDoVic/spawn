@@ -26,16 +26,12 @@ class Main extends PluginBase implements Listener{
 		$this->cfg = new Config($this->getDataFolder()."config.yml", Config::YAML, [
 			"message" => "§cTeleported to spawn",
 			"yaw" => 0,
-			"pitch" => 0
+			"pitch" => 0,
+			"cooldown" => -1
 		]);
 
 	}
-
-	public function onLogin(PlayerLoginEvent $ev){
-		$p = $ev->getPlayer();
-		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
-		$p->teleport(new Position($pos->x, $pos->y, $pos->z, $pos->getLevel()), $this->cfg->get("yaw"), $this->cfg->get("pitch"));
-	}
+	
 	public function onJoin(PlayerJoinEvent $ev){
 		$p = $ev->getPlayer();
 		$pos = $this->getServer()->getDefaultLevel()->getSafeSpawn();
